@@ -29,6 +29,17 @@ const CONFIG = {
   videoWidth: 1.0,
   videoHeight: 0.5625,
 
+  /* Video PLACEMENT on the poster (MindAR world units).
+   * Origin (0,0) = center of target.jpg. X: -0.5 left … +0.5 right.
+   * Y: + up / - down. Your current target.jpg is 1716x3036 portrait,
+   * so full poster is ~1.0 wide x ~1.77 tall (Y from +0.88 top to -0.88 bottom).
+   * Examples: center = 0,0 | top third = 0,0.55 | bottom third = 0,-0.55
+   * Move in steps of ~0.1 (≈10% of poster width) and re-test.
+   * videoZ = 0.01 lifts the video slightly to avoid flicker. */
+  videoOffsetX: 0,
+  videoOffsetY: 0,
+  videoZ: 0.01,
+
   // Physical printed poster size (for documentation / future scaling).
   // MindAR normalizes tracking to the image, so changing print size does NOT
   // require code changes — the video scales with the poster automatically.
@@ -197,6 +208,7 @@ async function initAR() {
     toneMapped: false,
   });
   videoPlane = new THREE.Mesh(geometry, material);
+  videoPlane.position.set(CONFIG.videoOffsetX, CONFIG.videoOffsetY, CONFIG.videoZ);
   videoPlane.visible = false; // hidden until TARGET FOUND
   anchor.group.add(videoPlane);
 
