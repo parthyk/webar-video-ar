@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#111827" />
   <meta name="description" content="WebAR Image-Tracking Video Experience. Point your camera at the poster to bring it to life. No app required." />
   <title>WebAR Video Experience</title>
-  <link rel="stylesheet" href="./style.css?v=4" />
+  <link rel="stylesheet" href="./style.css?v=5" />
 
   <!--
     Verified versions (Sept 2026, from official MindAR docs https://hiukim.github.io/mind-ar-js-doc):
@@ -35,7 +35,7 @@
       <p class="subtitle">Point your camera at the poster<br />to bring it to life.</p>
 
       <div class="poster-preview">
-        <img src="./assets/target.jpg?v=4" alt="Target poster preview - print this image to test tracking" />
+        <img src="./assets/target.jpg?v=5" alt="Target poster preview - print this image to test tracking" />
         <p>Print or display this poster, then press Start.</p>
       </div>
 
@@ -76,7 +76,7 @@
     <!-- Hidden video source. Rendered as a Three.js VideoTexture, never shown directly. -->
     <video
       id="arVideo"
-      src="./assets/video.mp4?v=4"
+      src="./assets/video.mp4?v=5"
       muted
       playsinline
       webkit-playsinline
@@ -117,6 +117,6 @@
 
   <!-- Lightweight QR generator (no build step). Falls back to text URL if CDN offline. -->
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
-  <script type="module" src="./app.js?v=4"></script>
+  <script type="module" src="./app.js?v=5"></script>
 </body>
 </html>

@@ -15,10 +15,10 @@ import { MindARThree } from "mindar-image-three";
  * ------------------------------------------------------------------------ */
 const CONFIG = {
   // MindAR compiled target. Generate it from ./assets/target.jpg (see README).
-  targetSrc: "./assets/target.mind?v=4",
+  targetSrc: "./assets/target.mind?v=5",
 
   // Video file played on the poster.
-  videoPath: "./assets/video.mp4?v=4",
+  videoPath: "./assets/video.mp4?v=5",
 
   /* Video plane size in MindAR world units.
    * The target image is ~1 unit wide, so VIDEO_WIDTH = 1 spans the poster.
@@ -47,9 +47,9 @@ const CONFIG = {
   physicalWidthMm: 210,   // A4 width
   physicalHeightMm: 297,  // A4 height
 
-  autoplay: false,  // tap video to play (no autoplay)
+  autoplay: true,   // play automatically when target found (muted)
   loop: true,       // set on the <video> element too
-  muted: false,     // tap is a user gesture, so we can start WITH sound
+  muted: true,      // MUST start muted for mobile autoplay; Sound btn unmutes
   clickToPlay: true, // tap the video plane toggles play/pause
 };
 
