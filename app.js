@@ -47,9 +47,10 @@ const CONFIG = {
   physicalWidthMm: 210,   // A4 width
   physicalHeightMm: 297,  // A4 height
 
-  autoplay: true,   // try to play as soon as the target is found
+  autoplay: false,  // tap video to play (no autoplay)
   loop: true,       // set on the <video> element too
-  muted: true,      // MUST start muted (mobile autoplay policy). Sound btn unmutes.
+  muted: false,     // tap is a user gesture, so we can start WITH sound
+  clickToPlay: true, // tap the video plane toggles play/pause
 };
 
 /* Set to true to show the debug panel (target state, camera, video, fps). */
@@ -217,12 +218,15 @@ async function initAR() {
     targetVisible = true;
     log("TARGET FOUND");
     videoPlane.visible = true;
-    setStatus("✓ Poster detected", true);
     if (CONFIG.autoplay) {
       video.play().catch((e) => {
         log("play() blocked:", e);
         setStatus("✓ Poster detected — tap 🔊 for video", true);
       });
+      setStatus("✓ Poster detected", true);
+    } else {
+      // Click-to-play: show first frame, wait for tap. Don't autoplay.
+      setStatus("✓ Poster detected — tap video to play", true);
     }
     updateDebug();
   };
@@ -235,6 +239,39 @@ async function initAR() {
     setStatus("Point your camera at the poster");
     updateDebug();
   };
+
+  // --- Click / tap video to play-pause (raycast against the video plane) ---
+  const raycaster = new THREE.Raycaster();
+  const pointer = new THREE.Vector2();
+  async function toggleVideoFromTap(clientX, clientY) {
+    if (!targetVisible || !videoPlane || !videoPlane.visible) return false;
+    const rect = renderer.domElement.getBoundingClientRect();
+    pointer.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+    pointer.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+    raycaster.setFromCamera(pointer, camera);
+    const hits = raycaster.intersectObject(videoPlane, false);
+    if (!hits.length) return false;
+    try {
+      if (video.paused) {
+        video.muted = false; // tap = gesture, allow sound
+        syncSoundBtn();
+        await video.play();
+        setStatus("▶ Playing — tap video to pause", true);
+      } else {
+        video.pause();
+        setStatus("⏸ Paused — tap video to resume", true);
+      }
+    } catch (e) {
+      log("tap play blocked:", e);
+      showError("Video could not play. Tap again.");
+    }
+    updateDebug();
+    return true;
+  }
+  // pointerdown fires fast on mobile; click as fallback for desktop.
+  renderer.domElement.addEventListener("pointerdown", (e) => {
+    toggleVideoFromTap(e.clientX, e.clientY);
+  });
 
   // Video element diagnostics -> user-facing messages.
   video.addEventListener("error", () => {
@@ -332,18 +369,21 @@ exitBtn.addEventListener("click", stopAR);
 errorBackBtn.addEventListener("click", stopAR);
 
 // Sound may only start after a user gesture: this button IS that gesture.
+function syncSoundBtn() {
+  const on = !video.muted;
+  soundBtn.innerHTML = on ? "🔊 Sound on" : "🔊 Sound off";
+  soundBtn.setAttribute("aria-pressed", String(on));
+}
+syncSoundBtn();
 soundBtn.addEventListener("click", async () => {
   try {
     if (video.muted) {
       video.muted = false;
       await video.play();
-      soundBtn.innerHTML = "🔊 Sound on";
-      soundBtn.setAttribute("aria-pressed", "true");
     } else {
       video.muted = true;
-      soundBtn.innerHTML = "🔊 Sound off";
-      soundBtn.setAttribute("aria-pressed", "false");
     }
+    syncSoundBtn();
     if (!targetVisible) setStatus("Point your camera at the poster");
   } catch (e) {
     video.muted = true;
