@@ -1,0 +1,23 @@
+# ---> Node / OS junk (never commit) <---
+node_modules/
+.DS_Store
+Thumbs.db
+dist-dev/
+
+# ---> Local dev certs (if you generate them for HTTPS testing) <---
+*.pem
+*.key
+*.crt
+
+# ---> Editor / tooling <---
+.vscode/
+.idea/
+*.log
+
+# ---> IMPORTANT: do NOT ignore the AR assets below <---
+# If you previously used a generic Video/Assets ignore rule, make sure these
+# files are still committed:
+#   !assets/target.jpg
+#   !assets/target.mind
+#   !assets/video.mp4
+#   !images/logo.png

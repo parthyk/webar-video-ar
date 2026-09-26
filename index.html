@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#111827" />
+  <meta name="description" content="WebAR Image-Tracking Video Experience. Point your camera at the poster to bring it to life. No app required." />
+  <title>WebAR Video Experience</title>
+  <link rel="stylesheet" href="./style.css" />
+
+  <!--
+    Verified versions (Sept 2026, from official MindAR docs https://hiukim.github.io/mind-ar-js-doc):
+    - MindAR 1.2.5  : https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js
+    - Three.js 0.160.0 via importmap (MindAR 1.2.x requires Three.js as external peer dependency)
+    See: https://hiukim.github.io/mind-ar-js-doc/more-examples/threejs-image
+  -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
+      "mindar-image-three": "https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js"
+    }
+  }
+  </script>
+</head>
+<body>
+
+  <!-- ================= LANDING / HOME SCREEN ================= -->
+  <main id="landing" class="screen">
+    <div class="card">
+      <img src="./images/logo.png" alt="WebAR logo" class="logo" width="96" height="96" />
+      <p class="eyebrow">Browser-based AR &middot; No app required</p>
+      <h1>A New AR Experience</h1>
+      <p class="subtitle">Point your camera at the poster<br />to bring it to life.</p>
+
+      <div class="poster-preview">
+        <img src="./assets/target.jpg" alt="Target poster preview - print this image to test tracking" />
+        <p>Print or display this poster, then press Start.</p>
+      </div>
+
+      <button id="startBtn" class="btn-primary">START AR</button>
+      <p id="landingError" class="error-text" hidden></p>
+
+      <ul class="badges">
+        <li>Works on Android &amp; iPhone</li>
+        <li>No app required</li>
+        <li>HTTPS via GitHub Pages</li>
+      </ul>
+
+      <!-- QR code section -->
+      <section class="qr-section">
+        <h2>Open on your phone</h2>
+        <p>Scan this QR code with your phone camera:</p>
+        <canvas id="qrCanvas" width="200" height="200" aria-label="QR code to this page"></canvas>
+        <p class="mono small" id="arUrlText"></p>
+        <button id="downloadQrBtn" class="btn-ghost" type="button">Download QR (PNG)</button>
+      </section>
+
+      <details class="help">
+        <summary>First time? Read this</summary>
+        <ol>
+          <li>Deploy this folder to GitHub Pages (see README).</li>
+          <li>Generate <code>assets/target.mind</code> from <code>assets/target.jpg</code> (see README &sect; Creating target.mind).</li>
+          <li>Open this page on your phone over <b>HTTPS</b>, tap START AR, allow the camera, and point at the printed poster.</li>
+        </ol>
+      </details>
+    </div>
+  </main>
+
+  <!-- ================= AR SCREEN ================= -->
+  <section id="arScreen" class="screen" hidden>
+    <!-- MindAR injects its camera feed + WebGL canvas here -->
+    <div id="arContainer"></div>
+
+    <!-- Hidden video source. Rendered as a Three.js VideoTexture, never shown directly. -->
+    <video
+      id="arVideo"
+      src="./assets/video.mp4"
+      muted
+      playsinline
+      webkit-playsinline
+      loop
+      preload="auto"
+      crossorigin="anonymous"
+      disablepictureinpicture
+      style="display:none"
+    ></video>
+
+    <!-- Top status pill -->
+    <div id="statusPill" class="pill">Point your camera at the poster</div>
+
+    <!-- Controls -->
+    <div class="ar-controls">
+      <button id="soundBtn" class="chip" type="button" aria-pressed="false">&#128266; Sound off</button>
+      <button id="exitBtn" class="chip chip-danger" type="button">&#10005; Exit AR</button>
+    </div>
+
+    <!-- Loading overlay -->
+    <div id="loadingOverlay" class="overlay" hidden>
+      <div class="spinner" aria-hidden="true"></div>
+      <p id="loadingText">Starting camera&hellip;</p>
+    </div>
+
+    <!-- Error overlay -->
+    <div id="errorOverlay" class="overlay" hidden>
+      <div class="error-card">
+        <h2>Something went wrong</h2>
+        <p id="errorMessage">Unknown error.</p>
+        <button id="errorBackBtn" class="btn-primary" type="button">Back</button>
+      </div>
+    </div>
+
+    <!-- Debug panel (visible only when DEBUG = true in app.js) -->
+    <pre id="debugPanel" class="debug" hidden></pre>
+  </section>
+
+  <!-- Lightweight QR generator (no build step). Falls back to text URL if CDN offline. -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
