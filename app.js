@@ -15,10 +15,10 @@ import { MindARThree } from "mindar-image-three";
  * ------------------------------------------------------------------------ */
 const CONFIG = {
   // MindAR compiled target. Generate it from ./assets/target.jpg (see README).
-  targetSrc: "./assets/target.mind",
+  targetSrc: "./assets/target.mind?v=4",
 
   // Video file played on the poster.
-  videoPath: "./assets/video.mp4",
+  videoPath: "./assets/video.mp4?v=4",
 
   /* Video plane size in MindAR world units.
    * The target image is ~1 unit wide, so VIDEO_WIDTH = 1 spans the poster.
