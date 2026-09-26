@@ -26,8 +26,8 @@ const CONFIG = {
    *   16:9 video -> 1.0 x 0.5625   |  4:3 video -> 1.0 x 0.75
    *   square     -> 0.7 x 0.7       |  A4 poster fill -> 1.0 x 1.4142
    * If the plane looks stretched, fix these two numbers. */
-  videoWidth: 1.0,
-  videoHeight: 0.5625,
+  videoWidth: 0.8,
+  videoHeight: 0.45,
 
   /* Video PLACEMENT on the poster (MindAR world units).
    * Origin (0,0) = center of target.jpg. X: -0.5 left … +0.5 right.
@@ -36,8 +36,8 @@ const CONFIG = {
    * Examples: center = 0,0 | top third = 0,0.55 | bottom third = 0,-0.55
    * Move in steps of ~0.1 (≈10% of poster width) and re-test.
    * videoZ = 0.01 lifts the video slightly to avoid flicker. */
-  videoOffsetX: 0,
-  videoOffsetY: 0,
+  videoOffsetX: 0.08,
+  videoOffsetY: -0.45,
   videoZ: 0.01,
 
   // Physical printed poster size (for documentation / future scaling).
